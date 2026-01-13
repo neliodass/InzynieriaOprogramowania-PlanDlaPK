@@ -22,7 +22,7 @@ def generate_data(n_classes, n_rooms, n_slots):
     courses = []
     for i in range(n_classes):
         t_id = random.randint(0, 4)
-        g_id = random.randint(0, 5)  #
+        g_id = random.randint(0, 5)
         stud_count = random.choice([25, 55, 110])
         courses.append(CourseClass(
             id=i, name=f"Lekcja {i}", group_id=g_id,

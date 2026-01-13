@@ -25,7 +25,7 @@ def evaluate_schedule(individual,courses,rooms,teachers,time_slots):
     teacher_schedule = {t.id: [] for t in teachers}
     group_schedule = {}
 
-
+    room_occupancy = {}
     for i in range(0,len(individual),2):
         course_index = i // 2
         course = courses[course_index]
@@ -35,7 +35,12 @@ def evaluate_schedule(individual,courses,rooms,teachers,time_slots):
         room = rooms[assigned_room_id]
         teacher = next((t for t in teachers if t.id == course.teacher_id), None)
         ts = time_slots[assigned_slot_id]
-
+        # Check room occupancy
+        occupancy_key = (assigned_room_id, assigned_slot_id)
+        if occupancy_key in room_occupancy:
+            penalty += 5000
+        else:
+            room_occupancy[occupancy_key] = True
         if room.capacity < course.student_count:
             penalty += 1000
         if assigned_slot_id in teacher.unavailable_time_slots_ids:
@@ -58,6 +63,10 @@ def evaluate_schedule(individual,courses,rooms,teachers,time_slots):
             next_class = sorted_schedule[k + 1]
             # Same day continuity check
             if curr_class[0] == next_class[0]:
+                # Check for back-to-back classes
+                if curr_class[1] == next_class[1]:
+                    local_penalty += 5000
+                    continue
                 # Check for gaps
                 gap = next_class[1] - curr_class[1] - 1
                 if gap > 0:
@@ -79,14 +88,27 @@ toolbox.register("mate", tools.cxTwoPoint)
 toolbox.register("mutate", tools.mutUniformInt, low=0, up=NUM_SLOTS-1, indpb=0.05)
 toolbox.register("select", tools.selTournament, tournsize=3)
 if __name__ == "__main__":
-    pop = toolbox.population(n=100)
-
+    TARGET_SCORE = 300
+    MAX_ATTEMPTS = 50
+    attempt = 1
     stats = tools.Statistics(lambda ind: ind.fitness.values[0])
     stats.register("min", min)
     stats.register("avg", lambda x: sum(x) / len(x))
-    print("Start ewolucji...")
-    result, log = algorithms.eaSimple(pop, toolbox, cxpb=0.5, mutpb=0.2, ngen=50,
-                                      stats=stats, verbose=True)
-
-    best_ind = tools.selBest(pop, 1)[0]
-    print(f"\nNajlepszy wynik (Penalty): {best_ind.fitness.values[0]}")
+    while attempt <= MAX_ATTEMPTS:
+        print(f"\n--- PRÓBA NR {attempt} ---")
+        pop = toolbox.population(n=100)
+        pop, log = algorithms.eaSimple(pop, toolbox, cxpb=0.7, mutpb=0.3, ngen=100,
+                                       stats=stats, verbose=False)
+        best_ind = tools.selBest(pop, 1)[0]
+        score = best_ind.fitness.values[0]
+        print(f"Zakończono próbę {attempt}. Najlepszy wynik: {score}")
+        if score <= TARGET_SCORE:
+            print(f"\n SUKCES! Znaleziono rozwiązanie z wynikiem {score} w próbie {attempt}.")
+            break
+        else:
+            print(" Wynik niesatysfakcjonujący. Restartuję algorytm...")
+            attempt += 1
+    if score <= TARGET_SCORE:
+        print(f"Szczegóły najlepszego rozwiązania: {best_ind}")
+    else:
+        print("Nie udało się znaleźć rozwiązania spełniającego kryteria w zadanej liczbie prób.")

@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optymalizator Planu Zajęć - Politechnika Krakowska</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* kolory PK */
+        :root {
+            --pk-blue: #003d82;
+            --pk-dark-gray: #2b2b2b;
+            --pk-light-gray: #f5f5f5;
+            --pk-accent: #0056b3;
+            --pk-orange: #ff6b35;
+        }
+        
+    <style>
+        
+        body {
+            background-color: var(--pk-light-gray);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* naglowek z logo PK */
+        .pk-header {
+            background: linear-gradient(135deg, var(--pk-blue) 0%, var(--pk-dark-gray) 100%);
+            color: white;
+            padding: 30px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        .pk-logo-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 10px;
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .pk-logo {
+            max-height: 70px;
+            width: auto;
+            height: 70px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .pk-header h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .pk-header p {
+            margin: 5px 0 0 0;
+            opacity: 0.9;
+        }
+
+        /* karty z obramowaniem PK */
+        .card {
+            border: none;
+            box-shadow: 0 2px 8px rgba(0, 61, 130, 0.1);
+            border-top: 4px solid var(--pk-blue);
+            margin-bottom: 25px;
+        }
+
+        .card-header {
+            background: linear-gradient(to right, var(--pk-blue), var(--pk-accent));
+            color: white;
+            font-weight: 600;
+            border: none;
+        }
+
+        /* przyciski w stylu PK */
+        .btn-pk-primary {
+            background: linear-gradient(135deg, var(--pk-blue) 0%, var(--pk-accent) 100%);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 12px 30px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-pk-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 61, 130, 0.3);
+            background: linear-gradient(135deg, var(--pk-accent) 0%, var(--pk-blue) 100%);
+            color: white;
+        }
+
+        /* labele formularza */
+        .form-label {
+            color: var(--pk-dark-gray);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            border: 2px solid #e0e0e0;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--pk-blue);
+            box-shadow: 0 0 0 0.2rem rgba(0, 61, 130, 0.15);
+        }
+
+        /* badge statusu */
+        .badge-pk-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            padding: 10px 20px;
+            font-size: 1.1rem;
+        }
+
+        .badge-pk-warning {
+            background: linear-gradient(135deg, var(--pk-orange) 0%, #ffa726 100%);
+            padding: 10px 20px;
+            font-size: 1.1rem;
+        }
+
+        /* toggle przyciskow */
+        .btn-outline-pk {
+            color: var(--pk-blue);
+            border-color: var(--pk-blue);
+        }
+
+        .btn-outline-pk:hover,
+        .btn-check:checked + .btn-outline-pk {
+            background-color: var(--pk-blue);
+            border-color: var(--pk-blue);
+            color: white;
+        }
+
+        .btn-group .btn-outline-primary {
+            color: var(--pk-blue);
+            border-color: var(--pk-blue);
+        }
+
+        .btn-group .btn-check:checked + .btn-outline-primary {
+            background-color: var(--pk-blue);
+            border-color: var(--pk-blue);
+        }
+
+        /* tabela planu */
+        .schedule-cell {
+            min-height: 70px;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        .schedule-cell.occupied {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            cursor: pointer;
+            border-left: 3px solid var(--pk-blue);
+        }
+
+        .schedule-cell.occupied:hover {
+            background: linear-gradient(135deg, #bbdefb 0%, #90caf9 100%);
+            transform: scale(1.02);
+            transition: all 0.2s;
+        }
+
+        .table thead th {
+            background-color: var(--pk-dark-gray);
+            color: white;
+            border: none;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* tabela kalendarza z równą szerokością kolumn */
+        #calendarTable {
+            table-layout: fixed;
+            width: 100%;
+        }
+
+        #calendarTable th,
+        #calendarTable td {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* wynik score */
+        .score-display {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--pk-blue);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* teksty pomocnicze */
+        small.text-muted {
+            color: #666 !important;
+        }
+
+        /* responsywnosc */
+        @media (max-width: 768px) {
+            .pk-header h1 {
+                font-size: 1.5rem;
+            }
+            .pk-logo-container {
+                padding: 8px;
+            }
+            .pk-logo {
+                max-height: 60px;
+                height: 60px;
+            }
+        }
+
+        /* styl dla spinnera z Uiverse */
+        .loadingspinner {
+            --square: 26px;
+            --offset: 30px;
+            --duration: 2.4s;
+            --delay: 0.2s;
+            --timing-function: ease-in-out;
+            --in-duration: 0.4s;
+            --in-delay: 0.1s;
+            --in-timing-function: ease-out;
+            width: calc(3 * var(--offset) + var(--square));
+            height: calc(2 * var(--offset) + var(--square));
+            padding: 0px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 10px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .loadingspinner div {
+            display: inline-block;
+            background: var(--pk-blue);
+            border: none;
+            border-radius: 2px;
+            width: var(--square);
+            height: var(--square);
+            position: absolute;
+            padding: 0px;
+            margin: 0px;
+            font-size: 6pt;
+            color: black;
+        }
+
+        .loadingspinner #square1 {
+            left: calc(0 * var(--offset));
+            top: calc(0 * var(--offset));
+            animation: square1 var(--duration) var(--delay) var(--timing-function) infinite,
+                squarefadein var(--in-duration) calc(1 * var(--in-delay)) var(--in-timing-function) both;
+        }
+
+        .loadingspinner #square2 {
+            left: calc(0 * var(--offset));
+            top: calc(1 * var(--offset));
+            animation: square2 var(--duration) var(--delay) var(--timing-function) infinite,
+                squarefadein var(--in-duration) calc(1 * var(--in-delay)) var(--in-timing-function) both;
+        }
+
+        .loadingspinner #square3 {
+            left: calc(1 * var(--offset));
+            top: calc(1 * var(--offset));
+            animation: square3 var(--duration) var(--delay) var(--timing-function) infinite,
+                squarefadein var(--in-duration) calc(2 * var(--in-delay)) var(--in-timing-function) both;
+        }
+
+        .loadingspinner #square4 {
+            left: calc(2 * var(--offset));
+            top: calc(1 * var(--offset));
+            animation: square4 var(--duration) var(--delay) var(--timing-function) infinite,
+                squarefadein var(--in-duration) calc(3 * var(--in-delay)) var(--in-timing-function) both;
+        }
+
+        .loadingspinner #square5 {
+            left: calc(3 * var(--offset));
+            top: calc(1 * var(--offset));
+            animation: square5 var(--duration) var(--delay) var(--timing-function) infinite,
+                squarefadein var(--in-duration) calc(4 * var(--in-delay)) var(--in-timing-function) both;
+        }
+
+        @keyframes square1 {
+            0% {
+                left: calc(0 * var(--offset));
+                top: calc(0 * var(--offset));
+            }
+            8.333% {
+                left: calc(0 * var(--offset));
+                top: calc(1 * var(--offset));
+            }
+            100% {
+                left: calc(0 * var(--offset));
+                top: calc(1 * var(--offset));
+            }
+        }
+
+        @keyframes square2 {
+            0% {
+                left: calc(0 * var(--offset));
+                top: calc(1 * var(--offset));
+            }
+            8.333% {
+                left: calc(0 * var(--offset));
+                top: calc(2 * var(--offset));
+            }
+            16.67% {
+                left: calc(1 * var(--offset));
+                top: calc(2 * var(--offset));
+            }
+            25.00% {
+                left: calc(1 * var(--offset));
+                top: calc(1 * var(--offset));
+            }
+            83.33% {
+                left: calc(1 * var(--offset));
+                top: calc(1 * var(--offset));
+            }
+            91.67% {
+                left: calc(1 * var(--offset));
+                top: calc(0 * var(--offset));
+            }
+            100% {
+                left: calc(0 * var(--offset));
+                top: calc(0 * var(--offset));
+            }
+        }
+
+        @keyframes square3 {
+            0%, 100% {
+                left: calc(1 * var(--offset));
+                top: calc(1 * var(--offset));
+            }
+            16.67% {
+                left: calc(1 * var(--offset));
+                top: calc(1 * var(--offset));
+            }
+            25.00% {
+                left: calc(1 * var(--offset));
+                top: calc(0 * var(--offset));
+            }
+            33.33% {
+                left: calc(2 * var(--offset));
+                top: calc(0 * var(--offset));
+            }
+            41.67% {
+                left: calc(2 * var(--offset));
+                top: calc(1 * var(--offset));
+            }
+            66.67% {
+                left: calc(2 * var(--offset));
+                top: calc(1 * var(--offset));
+            }
+            75.00% {
+                left: calc(2 * var(--offset));
+                top: calc(2 * var(--offset));
+            }
+            83.33% {
+                left: calc(1 * var(--offset));
+                top: calc(2 * var(--offset));
+            }
+            91.67% {
+                left: calc(1 * var(--offset));
+                top: calc(1 * var(--offset));
+            }
+        }
+
+        @keyframes square4 {
+            0% {
+                left: calc(2 * var(--offset));
+                top: calc(1 * var(--offset));
+            }
+            33.33% {
+                left: calc(2 * var(--offset));
+                top: calc(1 * var(--offset));
+            }
+            41.67% {
+                left: calc(2 * var(--offset));
+                top: calc(2 * var(--offset));
+            }
+            50.00% {
+                left: calc(3 * var(--offset));
+                top: calc(2 * var(--offset));
+            }
+            58.33% {
+                left: calc(3 * var(--offset));
+                top: calc(1 * var(--offset));
+            }
+            100% {
+                left: calc(3 * var(--offset));
+                top: calc(1 * var(--offset));
+            }
+        }
+
+        @keyframes square5 {
+            0% {
+                left: calc(3 * var(--offset));
+                top: calc(1 * var(--offset));
+            }
+            50.00% {
+                left: calc(3 * var(--offset));
+                top: calc(1 * var(--offset));
+            }
+            58.33% {
+                left: calc(3 * var(--offset));
+                top: calc(0 * var(--offset));
+            }
+            66.67% {
+                left: calc(2 * var(--offset));
+                top: calc(0 * var(--offset));
+            }
+            75.00% {
+                left: calc(2 * var(--offset));
+                top: calc(1 * var(--offset));
+            }
+            100% {
+                left: calc(2 * var(--offset));
+                top: calc(1 * var(--offset));
+            }
+        }
+
+        @keyframes squarefadein {
+            0% {
+                transform: scale(0.75);
+                opacity: 0.0;
+            }
+            100% {
+                transform: scale(1.0);
+                opacity: 1.0;
+            }
+        }
+
+        /* dodatkowe style dla planu */
+        .schedule-cell {
+            min-height: 60px;
+            border: 1px solid #dee2e6;
+            padding: 8px;
+            font-size: 0.85rem;
+        }
+
+        .schedule-cell.occupied {
+            background-color: #fff3cd;
+            cursor: pointer;
+        }
+
+        .schedule-cell.occupied:hover {
+            background-color: #ffe69c;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .card {
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+    </style>
+</head>
+<body>
+    <!-- naglowek z logo PK -->
+    <div class="pk-header">
+        <div class="container">
+            <div class="d-flex align-items-center">
+                <div class="pk-logo-container">
+                    <img src="{{ url_for('static', filename='pk_logo.png') }}" alt="PK Logo" class="pk-logo">
+                </div>
+                <div>
+                    <h1>Optymalizator Planu Zajęć</h1>
+                    <p>Politechnika Krakowska im. Tadeusza Kościuszki</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+        
+        <!-- info o systemie -->
+        <div class="alert alert-light border-0 shadow-sm mb-4" style="border-left: 4px solid var(--pk-blue) !important;">
+            <div class="row align-items-center">
+                <div class="col-md-1 text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="text-primary" viewBox="0 0 16 16" style="color: var(--pk-blue) !important;">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                    </svg>
+                </div>
+                <div class="col-md-11">
+                    <h6 class="mb-2" style="color: var(--pk-blue); font-weight: 600;">O systemie</h6>
+                    <p class="mb-0" style="font-size: 0.95rem;">System wykorzystuje algorytm genetyczny (DEAP) do automatycznej optymalizacji planu zajęć. 
+                    Uwzględnia konflikty sal, dostępność wykładowców oraz minimalizację przerw między zajęciami.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- sekcja pomocy z parametrami -->
+        <div class="card mb-3">
+            <div class="card-header help-header" style="cursor: pointer;">
+                <h6 class="mb-0 d-flex justify-content-between align-items-center">
+                    <span>📖 Jak interpretować parametry?</span>
+                    <span id="helpToggle">▼</span>
+                </h6>
+            </div>
+            <div id="helpSection" class="card-body hidden" style="background-color: #f8f9fa;">
+                <h6 style="color: var(--pk-blue); margin-bottom: 15px;">Parametry danych wejściowych:</h6>
+                <ul style="margin-bottom: 20px;">
+                    <li><strong>Liczba zajęć</strong> - ile przedmiotów/lekcji ma być zaplanowanych. Im więcej, tym trudniejsza optymalizacja.</li>
+                    <li><strong>Liczba sal</strong> - dostępne sale wykładowe. Więcej sal = więcej możliwości rozmieszczenia.</li>
+                    <li><strong>Liczba slotów czasowych</strong> - dostępne terminy (np. 20 slotów = 20 różnych godzin w tygodniu). Więcej slotów = większa elastyczność.</li>
+                </ul>
+
+                <h6 style="color: var(--pk-blue); margin-bottom: 15px;">Parametry algorytmu genetycznego:</h6>
+                <ul style="margin-bottom: 20px;">
+                    <li><strong>Target Score</strong> - maksymalny akceptowalny wynik penalty. 
+                        <br><small class="text-muted">Score = suma kar za konflikty, zbyt małe sale, niedostępność nauczycieli, przerwy między zajęciami. Im niższy score, tym lepszy plan. 0 = idealny plan bez konfliktów.</small></li>
+                    <li><strong>Max Attempts</strong> - ile razy algorytm może próbować znaleźć rozwiązanie. 
+                        <br><small class="text-muted">Jeśli pierwsza próba nie da wyniku ≤ target_score, algorytm startuje od nowa z losową populacją. Więcej prób = większa szansa na sukces, ale dłuższy czas.</small></li>
+                    <li><strong>Population Size</strong> - ile rozwiązań (osobników) w jednej populacji. 
+                        <br><small class="text-muted">Każdy osobnik to jeden możliwy plan zajęć. Większa populacja = więcej różnorodności, ale wolniejsze obliczenia. Zalecane: 50-200.</small></li>
+                    <li><strong>Generations</strong> - ile pokoleń ewolucji w jednej próbie. 
+                        <br><small class="text-muted">W każdym pokoleniu najlepsze rozwiązania są krzyżowane i mutowane. Więcej generacji = lepsze wyniki, ale dłuższy czas. Zalecane: 50-200.</small></li>
+                </ul>
+
+                <div class="alert alert-info mb-0" style="background-color: #e3f2fd; border-left: 4px solid var(--pk-blue);">
+                    <strong>💡 Wskazówki:</strong>
+                    <ul class="mb-0 mt-2">
+                        <li>Dla małych planów (10-20 zajęć): target_score 200-300, max_attempts 5-10</li>
+                        <li>Dla średnich planów (20-50 zajęć): target_score 300-500, max_attempts 10-20</li>
+                        <li>Dla dużych planów (50+ zajęć): target_score 500-1000, max_attempts 20-50</li>
+                        <li>Jeśli wynik jest "Nie osiągnięto target score" - zwiększ target_score lub max_attempts</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- formularz parametrow -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Parametry Generowania Planu</h5>
+            </div>
+            <div class="card-body">
+                <form id="scheduleForm">
+                    <!-- wybor typu danych -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Typ danych:</label>
+                        <div class="btn-group w-100" role="group">
+                            <input type="radio" class="btn-check" name="dataType" id="mockDataRadio" value="mock" checked>
+                            <label class="btn btn-outline-primary" for="mockDataRadio">Dane testowe (mock)</label>
+
+                            <input type="radio" class="btn-check" name="dataType" id="customDataRadio" value="custom">
+                            <label class="btn btn-outline-primary" for="customDataRadio">Własne dane</label>
+                        </div>
+                    </div>
+
+                    <!-- sekcja mock data -->
+                    <div id="mockDataSection">
+                        <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="numClasses" class="form-label">Liczba zajęć</label>
+                            <input type="number" class="form-control" id="numClasses" value="20" min="1">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="numRooms" class="form-label">Liczba sal</label>
+                            <input type="number" class="form-control" id="numRooms" value="5" min="1">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="numSlots" class="form-label">Liczba slotów czasowych</label>
+                            <input type="number" class="form-control" id="numSlots" value="20" min="1">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label for="targetScore" class="form-label">Target Score</label>
+                            <input type="number" class="form-control" id="targetScore" value="300" min="0">
+                            <small class="text-muted">Maksymalny akceptowalny wynik penalty</small>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="maxAttempts" class="form-label">Max Attempts</label>
+                            <input type="number" class="form-control" id="maxAttempts" value="10" min="1">
+                            <small class="text-muted">Liczba prób optymalizacji</small>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="populationSize" class="form-label">Population Size</label>
+                            <input type="number" class="form-control" id="populationSize" value="100" min="10">
+                            <small class="text-muted">Rozmiar populacji GA</small>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="generations" class="form-label">Generations</label>
+                            <input type="number" class="form-control" id="generations" value="100" min="10">
+                            <small class="text-muted">Liczba generacji na próbę</small>
+                        </div>
+                    </div>
+                    </div>
+
+                    <!-- sekcja custom data -->
+                    <div id="customDataSection" class="hidden">
+                        <div class="alert alert-info mb-3" style="background-color: #e3f2fd; border-left: 4px solid var(--pk-blue);">
+                            <strong>Użyj przykładowych danych z Politechniki Krakowskiej</strong>
+                            <p class="mb-2 mt-2">Zawiera prawdziwe nazwy sal (Działownia 1/15, Sala 131, Sala wykładowa KI) i przedmiotów.</p>
+                            <button type="button" class="btn btn-sm btn-primary" id="loadExampleBtn">
+                                📋 Załaduj przykładowe dane
+                            </button>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="jsonFile" class="form-label">Lub wgraj własny plik JSON:</label>
+                            <input type="file" class="form-control" id="jsonFile" accept=".json">
+                            <small class="text-muted">Format jak w example_custom_request.json</small>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="targetScoreCustom" class="form-label">Target Score</label>
+                                <input type="number" class="form-control" id="targetScoreCustom" value="500" min="0">
+                                <small class="text-muted">Maksymalny akceptowalny wynik penalty</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="maxAttemptsCustom" class="form-label">Max Attempts</label>
+                                <input type="number" class="form-control" id="maxAttemptsCustom" value="20" min="1">
+                                <small class="text-muted">Liczba prób optymalizacji</small>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="populationSizeCustom" class="form-label">Population Size</label>
+                                <input type="number" class="form-control" id="populationSizeCustom" value="100" min="10">
+                                <small class="text-muted">Rozmiar populacji GA</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="generationsCustom" class="form-label">Generations</label>
+                                <input type="number" class="form-control" id="generationsCustom" value="100" min="10">
+                                <small class="text-muted">Liczba generacji na próbę</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-pk-primary btn-lg w-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar-check me-2" viewBox="0 0 16 16" style="display: inline-block; vertical-align: middle;">
+                            <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                        </svg>
+                        Generuj Plan Zajęć
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- spinner ladowania -->
+        <div id="loadingSection" class="hidden text-center py-5">
+            <h4 class="mb-2" style="color: var(--pk-blue);">Optymalizacja w toku...</h4>
+            <p class="text-muted">Algorytm genetyczny szuka najlepszego rozwiązania</p>
+            <div class="loadingspinner">
+                <div id="square1"></div>
+                <div id="square2"></div>
+                <div id="square3"></div>
+                <div id="square4"></div>
+                <div id="square5"></div>
+            </div>
+        </div>
+
+        <!-- sekcja wynikow -->
+        <div id="resultsSection" class="hidden">
+            <!-- info o wyniku -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-6 text-center mb-3 mb-md-0">
+                            <h5 class="mb-3">Status Optymalizacji</h5>
+                            <span id="statusBadge" class="badge"></span>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <h5 class="mb-3">Wynik Penalty Score</h5>
+                            <div class="score-display" id="scoreValue"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- toggle miedzy widokami -->
+            <div class="mb-3 text-center">
+                <div class="btn-group" role="group">
+                    <input type="radio" class="btn-check" name="viewToggle" id="calendarView" checked>
+                    <label class="btn btn-outline-primary" for="calendarView">Widok kalendarza</label>
+
+                    <input type="radio" class="btn-check" name="viewToggle" id="listView">
+                    <label class="btn btn-outline-primary" for="listView">Widok listy</label>
+                </div>
+            </div>
+
+            <!-- widok kalendarza (tabela tygodniowa) -->
+            <div id="calendarContainer" class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Plan Zajęć - Widok Tygodniowy</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="calendarTable">
+                            <!-- wypelni js -->
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- widok listy -->
+            <div id="listContainer" class="card hidden">
+                <div class="card-header">
+                    <h5 class="mb-0">Plan Zajęć - Lista Szczegółowa</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover" id="listTable">
+                            <thead>
+                                <tr>
+                                    <th>Zajęcia</th>
+                                    <th>Sala</th>
+                                    <th>Dzień</th>
+                                    <th>Godzina</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- wypelni js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- stopka -->
+    <footer class="text-center py-4 mt-5" style="background-color: var(--pk-dark-gray); color: white;">
+        <div class="container">
+            <p class="mb-1">Politechnika Krakowska im. Tadeusza Kościuszki</p>
+            <p class="mb-0" style="opacity: 0.8; font-size: 0.9rem;">System optymalizacji planu zajęć - Algorytm Genetyczny</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // globalna zmienna na dane planu
+        let scheduleData = null;
+        let customData = null; // dane custom do wyslania
+
+        // mapowanie dni
+        const dayNames = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
+
+        // obsluga przełączania między mock a custom data
+        document.getElementById('mockDataRadio').addEventListener('change', () => {
+            document.getElementById('mockDataSection').classList.remove('hidden');
+            document.getElementById('customDataSection').classList.add('hidden');
+        });
+
+        document.getElementById('customDataRadio').addEventListener('change', () => {
+            document.getElementById('mockDataSection').classList.add('hidden');
+            document.getElementById('customDataSection').classList.remove('hidden');
+        });
+
+        // ladowanie przykładowych danych
+        document.getElementById('loadExampleBtn').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/static/example_custom_request.json');
+                const data = await response.json();
+                customData = data;
+                
+                // ustaw parametry z przykładowych danych
+                document.getElementById('targetScoreCustom').value = data.target_score || 500;
+                document.getElementById('maxAttemptsCustom').value = data.max_attempts || 20;
+                document.getElementById('populationSizeCustom').value = 100;
+                document.getElementById('generationsCustom').value = 100;
+                
+                alert('✅ Przykładowe dane załadowane! Kliknij "Generuj Plan Zajęć" aby rozpocząć optymalizację.');
+            } catch (error) {
+                alert('Błąd podczas ładowania przykładowych danych: ' + error.message);
+                console.error('Error:', error);
+            }
+        });
+
+        // obsluga wgrywania pliku JSON
+        document.getElementById('jsonFile').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                try {
+                    const data = JSON.parse(event.target.result);
+                    customData = data;
+                    
+                    // ustaw parametry z pliku
+                    if (data.target_score) document.getElementById('targetScoreCustom').value = data.target_score;
+                    if (data.max_attempts) document.getElementById('maxAttemptsCustom').value = data.max_attempts;
+                    if (data.population_size) document.getElementById('populationSizeCustom').value = data.population_size;
+                    if (data.generations) document.getElementById('generationsCustom').value = data.generations;
+                    
+                    alert('✅ Plik JSON załadowany pomyślnie!');
+                } catch (error) {
+                    alert('Błąd: Nieprawidłowy format JSON. ' + error.message);
+                    console.error('Error:', error);
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        // obsluga submitu formularza
+        document.getElementById('scheduleForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // sprawdz czy uzywamy mock czy custom data
+            const useMock = document.getElementById('mockDataRadio').checked;
+            let payload;
+
+            if (useMock) {
+                // mock data - standardowy payload
+                payload = {
+                    use_mock_data: true,
+                    num_classes: parseInt(document.getElementById('numClasses').value),
+                    num_rooms: parseInt(document.getElementById('numRooms').value),
+                    num_slots: parseInt(document.getElementById('numSlots').value),
+                    target_score: parseInt(document.getElementById('targetScore').value),
+                    max_attempts: parseInt(document.getElementById('maxAttempts').value),
+                    population_size: parseInt(document.getElementById('populationSize').value),
+                    generations: parseInt(document.getElementById('generations').value)
+                };
+            } else {
+                // custom data - uzyj zaladowanych danych
+                if (!customData) {
+                    alert('Najpierw załaduj dane (przykładowe lub z pliku JSON)!');
+                    return;
+                }
+                
+                payload = {
+                    use_mock_data: false,
+                    courses: customData.courses,
+                    rooms: customData.rooms,
+                    teachers: customData.teachers,
+                    time_slots: customData.time_slots,
+                    target_score: parseInt(document.getElementById('targetScoreCustom').value),
+                    max_attempts: parseInt(document.getElementById('maxAttemptsCustom').value),
+                    population_size: parseInt(document.getElementById('populationSizeCustom').value),
+                    generations: parseInt(document.getElementById('generationsCustom').value)
+                };
+            }
+
+            // pokaz spinner, schowaj wyniki
+            document.getElementById('loadingSection').classList.remove('hidden');
+            document.getElementById('resultsSection').classList.add('hidden');
+
+            try {
+                // wyslij request do API
+                const response = await fetch('/schedule', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                
+                // zapisz dane
+                scheduleData = data;
+
+                // wyswietl wyniki
+                displayResults(data);
+
+            } catch (error) {
+                alert('Błąd: ' + error.message);
+                console.error('Error:', error);
+            } finally {
+                // schowaj spinner
+                document.getElementById('loadingSection').classList.add('hidden');
+            }
+        });
+
+        // funkcja wyswietlajaca wyniki
+        function displayResults(data) {
+            // pokaz sekcje wynikow
+            document.getElementById('resultsSection').classList.remove('hidden');
+
+            // ustaw status badge
+            const statusBadge = document.getElementById('statusBadge');
+            if (data.success) {
+                statusBadge.textContent = 'Sukces!';
+                statusBadge.className = 'badge badge-pk-success';
+            } else {
+                statusBadge.textContent = 'Nie osiągnięto target score';
+                statusBadge.className = 'badge badge-pk-warning';
+            }
+
+            // ustaw score
+            document.getElementById('scoreValue').textContent = data.score;
+
+            // wygeneruj widoki
+            generateCalendarView(data.schedule);
+            generateListView(data.schedule);
+        }
+
+        // generowanie widoku kalendarza
+        function generateCalendarView(schedule) {
+            // najpierw muszimy znalezc unikalne dni i godziny
+            const days = [...new Set(schedule.map(s => s.day))].sort((a, b) => a - b);
+            const hours = [...new Set(schedule.map(s => s.hour_index))].sort((a, b) => a - b);
+
+            // stworzenie mapy hour_index -> label (pierwszy napotkany label dla danego hour_index)
+            // wyciagamy tylko godzine z label (np. "Poniedziałek 8:00-9:30" -> "8:00-9:30")
+            const hourLabels = {};
+            schedule.forEach(item => {
+                if (!hourLabels[item.hour_index]) {
+                    // wyciagnij tylko godzine z label - usuń nazwę dnia
+                    let timeOnly = item.label;
+                    // usuń nazwy dni (Poniedziałek, Wtorek, etc.)
+                    timeOnly = timeOnly.replace(/^(Poniedziałek|Wtorek|Środa|Czwartek|Piatek|Sobota|Niedziela|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\s+/i, '');
+                    hourLabels[item.hour_index] = timeOnly;
+                }
+            });
+
+            // stworzenie struktury danych: [day][hour] = zajecia
+            const grid = {};
+            schedule.forEach(item => {
+                const key = `${item.day}_${item.hour_index}`;
+                if (!grid[key]) {
+                    grid[key] = [];
+                }
+                grid[key].push(item);
+            });
+
+            // budowanie tabeli z równą szerokością kolumn
+            let html = '<thead><tr><th style="width: 150px;">Godzina</th>';
+            days.forEach(day => {
+                html += `<th>${dayNames[day] || 'Dzień ' + day}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+
+            // kazdy wiersz to inna godzina
+            hours.forEach(hour => {
+                const timeLabel = hourLabels[hour] || `Slot ${hour}`;
+                html += `<tr><td class="text-center"><strong style="font-size: 0.9rem;">${timeLabel}</strong></td>`;
+                days.forEach(day => {
+                    const key = `${day}_${hour}`;
+                    const items = grid[key] || [];
+                    
+                    if (items.length > 0) {
+                        // jesli sa zajecia w tym slocie
+                        html += '<td class="schedule-cell occupied">';
+                        items.forEach((item, idx) => {
+                            html += `<div><strong style="color: var(--pk-blue);">${item.course_name}</strong><br>`;
+                            html += `<small style="color: #666;">📍 ${item.room_name}</small></div>`;
+                            if (idx < items.length - 1) html += '<hr class="my-1">';
+                        });
+                        html += '</td>';
+                    } else {
+                        // pusty slot
+                        html += '<td class="schedule-cell"></td>';
+                    }
+                });
+                html += '</tr>';
+            });
+
+            html += '</tbody>';
+            document.getElementById('calendarTable').innerHTML = html;
+        }
+
+        // generowanie widoku listy
+        function generateListView(schedule) {
+            const tbody = document.querySelector('#listTable tbody');
+            tbody.innerHTML = '';
+
+            // sortowanie po dniu i godzinie
+            const sorted = [...schedule].sort((a, b) => {
+                if (a.day !== b.day) return a.day - b.day;
+                return a.hour_index - b.hour_index;
+            });
+
+            sorted.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.course_name}</td>
+                    <td>${item.room_name}</td>
+                    <td>${dayNames[item.day] || 'Dzień ' + item.day}</td>
+                    <td>${item.label}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // obsluga togglea sekcji pomocy
+        const helpHeader = document.querySelector('.help-header');
+        if (helpHeader) {
+            helpHeader.addEventListener('click', () => {
+                const helpSection = document.getElementById('helpSection');
+                const helpToggle = document.getElementById('helpToggle');
+                helpSection.classList.toggle('hidden');
+                if (helpSection.classList.contains('hidden')) {
+                    helpToggle.textContent = '▼';
+                } else {
+                    helpToggle.textContent = '▲';
+                }
+            });
+        }
+
+        // obsluga togglea miedzy widokami
+        document.getElementById('calendarView').addEventListener('change', () => {
+            document.getElementById('calendarContainer').classList.remove('hidden');
+            document.getElementById('listContainer').classList.add('hidden');
+        });
+
+        document.getElementById('listView').addEventListener('change', () => {
+            document.getElementById('calendarContainer').classList.add('hidden');
+            document.getElementById('listContainer').classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>

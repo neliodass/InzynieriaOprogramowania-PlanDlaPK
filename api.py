@@ -1,9 +1,14 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from models import CourseClass, Room, Teacher, TimeSlot
 from scheduler import SchedulerEngine
 from services.mock_data_generator import generate_data
 
 app = Flask(__name__)
+
+
+@app.route('/', methods=['GET'])
+def index():
+    return render_template('index.html')
 
 
 @app.route('/schedule', methods=['POST'])

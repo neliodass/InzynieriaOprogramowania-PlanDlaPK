@@ -1,0 +1,9 @@
+{
+
+  "max_attempts": 10,
+  "target_score": 300,
+  "num_slots": 20,
+  "num_rooms": 5,
+  "num_classes": 20,
+  "use_mock_data": true
+}

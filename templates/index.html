@@ -200,6 +200,25 @@
             display: none;
         }
 
+        /* style dla przycisku load example */
+        .load-btn-wrapper:hover .load-btn-glow {
+            opacity: 1;
+        }
+
+        .btn-load-example:hover {
+            background-color: #1a1a1a !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-load-example:hover .load-btn-arrow path:first-child {
+            opacity: 1;
+        }
+
+        .btn-load-example:hover .load-btn-arrow path:last-child {
+            transform: translateX(3px);
+        }
+
         /* teksty pomocnicze */
         small.text-muted {
             color: #666 !important;
@@ -605,12 +624,37 @@
 
                     <!-- sekcja custom data -->
                     <div id="customDataSection" class="hidden">
-                        <div class="alert alert-info mb-3" style="background-color: #e3f2fd; border-left: 4px solid var(--pk-blue);">
-                            <strong>Użyj przykładowych danych z Politechniki Krakowskiej</strong>
-                            <p class="mb-2 mt-2">Zawiera prawdziwe nazwy sal (Działownia 1/15, Sala 131, Sala wykładowa KI) i przedmiotów.</p>
-                            <button type="button" class="btn btn-sm btn-primary" id="loadExampleBtn">
-                                📋 Załaduj przykładowe dane
-                            </button>
+                        <div class="mb-4">
+                            <p class="mb-3">Użyj zapisanych danych</p>
+                            <div style="position: relative; display: inline-block;" class="load-btn-wrapper">
+                                <div class="load-btn-glow" style="position: absolute; inset: 0; border-radius: 12px; opacity: 0.6; transition: opacity 0.2s; background: linear-gradient(to right, var(--pk-blue), var(--pk-accent), var(--pk-dark-gray)); filter: blur(10px); pointer-events: none;"></div>
+                                <button
+                                    type="button"
+                                    id="loadExampleBtn"
+                                    class="btn-load-example"
+                                    style="position: relative; display: inline-flex; align-items: center; justify-content: center; border-radius: 12px; background-color: var(--pk-dark-gray); color: white; padding: 12px 32px; font-weight: 600; border: none; transition: all 0.2s; z-index: 1;"
+                                >
+                                    Załaduj zapisane dane
+                                    <svg
+                                        aria-hidden="true"
+                                        viewBox="0 0 10 10"
+                                        height="10"
+                                        width="10"
+                                        fill="none"
+                                        style="margin-left: 8px; stroke: white; stroke-width: 2;"
+                                        class="load-btn-arrow"
+                                    >
+                                        <path
+                                            d="M0 5h7"
+                                            style="opacity: 0; transition: opacity 0.2s;"
+                                        ></path>
+                                        <path
+                                            d="M1 1l4 4-4 4"
+                                            style="transition: transform 0.2s;"
+                                        ></path>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
 
                         <div class="mb-3">
@@ -770,24 +814,33 @@
         });
 
         // ladowanie przykładowych danych
-        document.getElementById('loadExampleBtn').addEventListener('click', async () => {
-            try {
-                const response = await fetch('/static/example_custom_request.json');
-                const data = await response.json();
-                customData = data;
+        const loadExampleBtn = document.getElementById('loadExampleBtn');
+        if (loadExampleBtn) {
+            loadExampleBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 
-                // ustaw parametry z przykładowych danych
-                document.getElementById('targetScoreCustom').value = data.target_score || 500;
-                document.getElementById('maxAttemptsCustom').value = data.max_attempts || 20;
-                document.getElementById('populationSizeCustom').value = 100;
-                document.getElementById('generationsCustom').value = 100;
-                
-                alert('✅ Przykładowe dane załadowane! Kliknij "Generuj Plan Zajęć" aby rozpocząć optymalizację.');
-            } catch (error) {
-                alert('Błąd podczas ładowania przykładowych danych: ' + error.message);
-                console.error('Error:', error);
-            }
-        });
+                try {
+                    const response = await fetch('/static/example_custom_request.json');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    customData = data;
+                    
+                    // ustaw parametry z przykładowych danych
+                    document.getElementById('targetScoreCustom').value = data.target_score || 500;
+                    document.getElementById('maxAttemptsCustom').value = data.max_attempts || 20;
+                    document.getElementById('populationSizeCustom').value = 100;
+                    document.getElementById('generationsCustom').value = 100;
+                    
+                    alert('✅ Przykładowe dane załadowane! Kliknij "Generuj Plan Zajęć" aby rozpocząć optymalizację.');
+                } catch (error) {
+                    alert('Błąd podczas ładowania przykładowych danych: ' + error.message);
+                    console.error('Error:', error);
+                }
+            });
+        }
 
         // obsluga wgrywania pliku JSON
         document.getElementById('jsonFile').addEventListener('change', (e) => {

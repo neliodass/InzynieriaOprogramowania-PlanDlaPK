@@ -1,0 +1,175 @@
+{
+  "use_mock_data": false,
+  "courses": [
+    {
+      "id": 0,
+      "name": "Analiza matematyczna",
+      "group_id": 0,
+      "subject": "Matematyka",
+      "teacher_id": 0,
+      "student_count": 120
+    },
+    {
+      "id": 1,
+      "name": "Fizyka",
+      "group_id": 0,
+      "subject": "Fizyka",
+      "teacher_id": 1,
+      "student_count": 90
+    },
+    {
+      "id": 2,
+      "name": "Programowanie równoległe i rozproszone",
+      "group_id": 1,
+      "subject": "Informatyka",
+      "teacher_id": 2,
+      "student_count": 30
+    },
+    {
+      "id": 3,
+      "name": "Systemy złożone",
+      "group_id": 1,
+      "subject": "Informatyka",
+      "teacher_id": 3,
+      "student_count": 45
+    }
+  ],
+  "rooms": [
+    {
+      "id": 0,
+      "name": "Działownia 1/15",
+      "capacity": 150
+    },
+    {
+      "id": 1,
+      "name": "Sala 131",
+      "capacity": 30
+    },
+    {
+      "id": 2,
+      "name": "Sala wykładowa KI",
+      "capacity": 100
+    },
+     {
+      "id": 3,
+      "name": "Sala N",
+      "capacity": 60
+    }
+  ],
+  "teachers": [
+    {
+      "id": 0,
+      "name": "dr Anna Pudełko",
+      "unavailable_time_slots_ids": [0, 1, 10]
+    },
+    {
+      "id": 1,
+      "name": "prof. dr hab. Stanisław Drożdż",
+      "unavailable_time_slots_ids": [5, 6, 7]
+    },
+    {
+      "id": 2,
+      "name": "dr inż. Filip Krużel",
+      "unavailable_time_slots_ids": [2, 14]
+    },
+    {
+      "id": 3,
+      "name": "dr hab. Jarosław Kwapień",
+      "unavailable_time_slots_ids": [3, 4]
+    }
+  ],
+  "time_slots": [
+    {
+      "id": 0,
+      "day": 0,
+      "hour_index": 0,
+      "label": "Monday 8:00"
+    },
+    {
+      "id": 1,
+      "day": 0,
+      "hour_index": 1,
+      "label": "Monday 10:00"
+    },
+    {
+      "id": 2,
+      "day": 0,
+      "hour_index": 2,
+      "label": "Monday 12:00"
+    },
+    {
+      "id": 3,
+      "day": 1,
+      "hour_index": 0,
+      "label": "Tuesday 8:00"
+    },
+    {
+      "id": 4,
+      "day": 1,
+      "hour_index": 1,
+      "label": "Tuesday 10:00"
+    },
+    {
+      "id": 5,
+      "day": 1,
+      "hour_index": 2,
+      "label": "Tuesday 12:00"
+    },
+    {
+      "id": 6,
+      "day": 2,
+      "hour_index": 0,
+      "label": "Wednesday 8:00"
+    },
+    {
+      "id": 7,
+      "day": 2,
+      "hour_index": 1,
+      "label": "Wednesday 10:00"
+    },
+    {
+      "id": 8,
+      "day": 2,
+      "hour_index": 2,
+      "label": "Wednesday 12:00"
+    },
+    {
+      "id": 9,
+      "day": 3,
+      "hour_index": 0,
+      "label": "Thursday 8:00"
+    },
+    {
+      "id": 10,
+      "day": 3,
+      "hour_index": 1,
+      "label": "Thursday 10:00"
+    },
+    {
+      "id": 11,
+      "day": 3,
+      "hour_index": 2,
+      "label": "Thursday 12:00"
+    },
+    {
+      "id": 12,
+      "day": 4,
+      "hour_index": 0,
+      "label": "Friday 8:00"
+    },
+    {
+      "id": 13,
+      "day": 4,
+      "hour_index": 1,
+      "label": "Friday 10:00"
+    },
+    {
+      "id": 14,
+      "day": 4,
+      "hour_index": 2,
+      "label": "Friday 12:00"
+    }
+  ],
+  "target_score": 500,
+  "max_attempts": 20
+}

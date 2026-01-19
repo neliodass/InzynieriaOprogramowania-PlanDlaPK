@@ -743,6 +743,31 @@
                 </div>
             </div>
 
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Filtruj według grupy nadrzędnej:</label>
+                            <select class="form-select" id="parentGroupFilter">
+                                <option value="">Wszystkie grupy nadrzędne</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Filtruj według grupy podrzędnej:</label>
+                            <select class="form-select" id="childGroupFilter">
+                                <option value="">Wszystkie grupy podrzędne</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Filtruj według nauczyciela:</label>
+                            <select class="form-select" id="teacherFilter">
+                                <option value="">Wszyscy nauczyciele</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- widok kalendarza (tabela tygodniowa) -->
             <div id="calendarContainer" class="card">
                 <div class="card-header">
@@ -795,11 +820,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // globalna zmienna na dane planu
         let scheduleData = null;
-        let customData = null; // dane custom do wyslania
+        let customData = null;
+        let fullSchedule = [];
+        let allGroups = [];
+        let parentGroups = [];
+        let childGroups = [];
+        let teachers = [];
 
-        // mapowanie dni
         const dayNames = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
 
         // obsluga przełączania między mock a custom data
@@ -901,6 +929,7 @@
                     rooms: customData.rooms,
                     teachers: customData.teachers,
                     time_slots: customData.time_slots,
+                    groups: customData.groups || [],
                     target_score: parseInt(document.getElementById('targetScoreCustom').value),
                     max_attempts: parseInt(document.getElementById('maxAttemptsCustom').value),
                     population_size: parseInt(document.getElementById('populationSizeCustom').value),
@@ -941,10 +970,8 @@
 
         // funkcja wyswietlajaca wyniki
         function displayResults(data) {
-            // pokaz sekcje wynikow
             document.getElementById('resultsSection').classList.remove('hidden');
 
-            // ustaw status badge
             const statusBadge = document.getElementById('statusBadge');
             if (data.success) {
                 statusBadge.textContent = 'Sukces!';
@@ -954,13 +981,94 @@
                 statusBadge.className = 'badge badge-pk-warning';
             }
 
-            // ustaw score
             document.getElementById('scoreValue').textContent = data.score;
 
-            // wygeneruj widoki
-            generateCalendarView(data.schedule);
-            generateListView(data.schedule);
+            fullSchedule = data.schedule;
+            allGroups = data.groups || [];
+            teachers = data.teachers || [];
+
+            // Rozdzielenie grup na nadrzędne i podrzędne
+            parentGroups = allGroups.filter(g => g.parent_group_id === null || g.parent_group_id === undefined);
+            childGroups = allGroups.filter(g => g.parent_group_id !== null && g.parent_group_id !== undefined);
+
+            populateFilters();
+
+            generateCalendarView(fullSchedule);
+            generateListView(fullSchedule);
         }
+
+        function populateFilters() {
+            const parentGroupFilter = document.getElementById('parentGroupFilter');
+            const childGroupFilter = document.getElementById('childGroupFilter');
+            const teacherFilter = document.getElementById('teacherFilter');
+
+            // Wypełnienie filtra grup nadrzędnych
+            parentGroupFilter.innerHTML = '<option value="">Wszystkie grupy nadrzędne</option>';
+            parentGroups.forEach(group => {
+                const option = document.createElement('option');
+                option.value = group.id;
+                option.textContent = group.name;
+                parentGroupFilter.appendChild(option);
+            });
+
+            // Wypełnienie filtra grup podrzędnych
+            childGroupFilter.innerHTML = '<option value="">Wszystkie grupy podrzędne</option>';
+            childGroups.forEach(group => {
+                const option = document.createElement('option');
+                option.value = group.id;
+                option.textContent = group.name;
+                childGroupFilter.appendChild(option);
+            });
+
+            // Wypełnienie filtra nauczycieli
+            teacherFilter.innerHTML = '<option value="">Wszyscy nauczyciele</option>';
+            teachers.forEach(teacher => {
+                const option = document.createElement('option');
+                option.value = teacher.id;
+                option.textContent = teacher.name;
+                teacherFilter.appendChild(option);
+            });
+        }
+
+        function applyFilters() {
+            const parentGroupId = document.getElementById('parentGroupFilter').value;
+            const childGroupId = document.getElementById('childGroupFilter').value;
+            const teacherId = document.getElementById('teacherFilter').value;
+
+            let filtered = fullSchedule;
+
+            // Filtrowanie po grupie nadrzędnej
+            if (parentGroupId !== '') {
+                filtered = filtered.filter(item => {
+                    // Jeśli zajęcia należą bezpośrednio do grupy nadrzędnej
+                    if (item.group_id == parentGroupId) {
+                        return true;
+                    }
+                    // Jeśli zajęcia należą do grupy podrzędnej tej grupy nadrzędnej
+                    if (item.parent_group_id == parentGroupId) {
+                        return true;
+                    }
+                    return false;
+                });
+            }
+
+            // Filtrowanie po grupie podrzędnej (konkretna grupa)
+            if (childGroupId !== '') {
+                filtered = filtered.filter(item => item.group_id == childGroupId);
+            }
+
+            // Filtrowanie po nauczycielu
+            if (teacherId !== '') {
+                filtered = filtered.filter(item => item.teacher_id == teacherId);
+            }
+
+            generateCalendarView(filtered);
+            generateListView(filtered);
+        }
+
+        document.getElementById('parentGroupFilter').addEventListener('change', applyFilters);
+        document.getElementById('childGroupFilter').addEventListener('change', applyFilters);
+        document.getElementById('teacherFilter').addEventListener('change', applyFilters);
 
         // generowanie widoku kalendarza
         function generateCalendarView(schedule) {
@@ -976,10 +1084,10 @@
                     // wyciagnij tylko godzine z label - usuń nazwę dnia
                     let timeOnly = item.label;
                     // usuń nazwy dni (Poniedziałek, Wtorek, etc.)
-                    timeOnly = timeOnly.replace(/^(Poniedziałek|Wtorek|Środa|Czwartek|Piatek|Sobota|Niedziela|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\s+/i, '');
+                    timeOnly = timeOnly.replace(/^(Poniedziałek|Wtorek|Środa|Czwartek|Piątek|Sobota|Niedziela|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\s+/i, '');
                     hourLabels[item.hour_index] = timeOnly;
                 }
-            });
+            })
 
             // stworzenie struktury danych: [day][hour] = zajecia
             const grid = {};

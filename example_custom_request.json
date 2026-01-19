@@ -1,328 +1,302 @@
 {
   "use_mock_data": false,
+      "id": 200,
+      "name": "ROK II - Informatyka (Wykład)",
+      "parent_group_id": null
+    },
+    {
+      "id": 201,
+      "name": "ROK II - Grupa 21",
+      "parent_group_id": 200
+    },
+    {
+      "id": 202,
+      "name": "ROK II - Grupa 22",
+      "parent_group_id": 200
+    },
+    {
+      "id": 300,
+      "name": "ROK III - Informatyka (Wykład)",
+      "parent_group_id": null
+    },
+    {
+      "id": 301,
+      "name": "ROK III - Grupa 31",
+      "parent_group_id": 300
+    },
+    {
+      "id": 302,
+      "name": "ROK III - Grupa 32",
+      "parent_group_id": 300
+    },
+    {
+      "id": 400,
+      "name": "ROK IV - Informatyka (Wykład)",
+      "parent_group_id": null
+    },
+    {
+      "id": 401,
+      "name": "ROK IV - Grupa 41",
+      "parent_group_id": 400
+    },
+    {
+      "id": 402,
+      "name": "ROK IV - Grupa 42",
+      "parent_group_id": 400
+    },
+    {
+      "id": 403,
+      "name": "ROK IV - Grupa 43",
+      "parent_group_id": 400
+    }
+  ],
   "courses": [
     {
-      "id": 0,
-      "name": "Analiza matematyczna",
-      "group_id": 0,
+      "id": 1,
+      "name": "Analiza matematyczna (Wykład)",
+      "group_id": 100,
       "subject": "Matematyka",
-      "teacher_id": 0,
+      "teacher_id": 1,
       "student_count": 120
     },
     {
-      "id": 1,
-      "name": "Analiza matematyczna - ćwiczenia",
-      "group_id": 0,
+      "id": 2,
+      "name": "Analiza matematyczna (Ćwiczenia)",
+      "group_id": 101,
       "subject": "Matematyka",
-      "teacher_id": 0,
+      "teacher_id": 1,
       "student_count": 30
     },
     {
-      "id": 2,
-      "name": "Fizyka",
-      "group_id": 0,
+      "id": 3,
+      "name": "Fizyka (Wykład)",
+      "group_id": 100,
       "subject": "Fizyka",
-      "teacher_id": 1,
+      "teacher_id": 2,
+      "student_count": 120
+    },
+    {
+      "id": 4,
+      "name": "Wstęp do informatyki (Wykład)",
+      "group_id": 100,
+      "subject": "Informatyka",
+      "teacher_id": 3,
+      "student_count": 120
+    },
+    {
+      "id": 5,
+      "name": "Logika dla inżynierów (Wykład)",
+      "group_id": 100,
+      "subject": "Matematyka",
+      "teacher_id": 4,
+      "student_count": 120
+    },
+    {
+      "id": 6,
+      "name": "Systemy operacyjne (Wykład)",
+      "group_id": 200,
+      "subject": "Informatyka",
+      "teacher_id": 5,
       "student_count": 90
     },
     {
-      "id": 3,
-      "name": "Fizyka - laboratorium",
-      "group_id": 0,
-      "subject": "Fizyka",
-      "teacher_id": 1,
-      "student_count": 20
-    },
-    {
-      "id": 4,
-      "name": "Programowanie równoległe i rozproszone",
-      "group_id": 1,
-      "subject": "Informatyka",
-      "teacher_id": 2,
-      "student_count": 30
-    },
-    {
-      "id": 5,
-      "name": "Systemy złożone",
-      "group_id": 1,
-      "subject": "Informatyka",
-      "teacher_id": 3,
-      "student_count": 45
-    },
-    {
-      "id": 6,
-      "name": "Bazy danych",
-      "group_id": 1,
-      "subject": "Informatyka",
-      "teacher_id": 4,
-      "student_count": 35
-    },
-    {
       "id": 7,
-      "name": "Algorytmy i struktury danych",
-      "group_id": 1,
+      "name": "Systemy operacyjne (Laboratorium)",
+      "group_id": 201,
       "subject": "Informatyka",
       "teacher_id": 5,
-      "student_count": 40
-    },
-    {
-      "id": 8,
-      "name": "Sztuczna inteligencja",
-      "group_id": 1,
-      "subject": "Informatyka",
-      "teacher_id": 6,
-      "student_count": 50
-    },
-    {
-      "id": 9,
-      "name": "Sieci komputerowe",
-      "group_id": 1,
-      "subject": "Informatyka",
-      "teacher_id": 7,
-      "student_count": 40
-    },
-    {
-      "id": 10,
-      "name": "Algebra liniowa",
-      "group_id": 0,
-      "subject": "Matematyka",
-      "teacher_id": 0,
-      "student_count": 100
-    },
-    {
-      "id": 11,
-      "name": "Rachunek prawdopodobieństwa",
-      "group_id": 0,
-      "subject": "Matematyka",
-      "teacher_id": 8,
-      "student_count": 80
-    },
-    {
-      "id": 12,
-      "name": "Elektrotechnika",
-      "group_id": 2,
-      "subject": "Elektrotechnika",
-      "teacher_id": 9,
-      "student_count": 60
-    },
-    {
-      "id": 13,
-      "name": "Elektrotechnika - laboratorium",
-      "group_id": 2,
-      "subject": "Elektrotechnika",
-      "teacher_id": 9,
       "student_count": 15
     },
     {
-      "id": 14,
-      "name": "Mechanika",
-      "group_id": 2,
-      "subject": "Mechanika",
-      "teacher_id": 10,
-      "student_count": 70
-    },
-    {
-      "id": 15,
-      "name": "Chemia",
-      "group_id": 0,
-      "subject": "Chemia",
-      "teacher_id": 11,
-      "student_count": 85
-    },
-    {
-      "id": 16,
-      "name": "Chemia - laboratorium",
-      "group_id": 0,
-      "subject": "Chemia",
-      "teacher_id": 11,
-      "student_count": 20
-    },
-    {
-      "id": 17,
-      "name": "Język angielski",
-      "group_id": 0,
-      "subject": "Języki",
-      "teacher_id": 12,
-      "student_count": 25
-    },
-    {
-      "id": 18,
-      "name": "Język angielski - grupa 2",
-      "group_id": 0,
-      "subject": "Języki",
-      "teacher_id": 12,
-      "student_count": 25
-    },
-    {
-      "id": 19,
-      "name": "Inżynieria oprogramowania",
-      "group_id": 1,
-      "subject": "Informatyka",
-      "teacher_id": 2,
-      "student_count": 35
-    },
-    {
-      "id": 20,
-      "name": "Grafika komputerowa",
-      "group_id": 1,
-      "subject": "Informatyka",
-      "teacher_id": 5,
-      "student_count": 30
-    },
-    {
-      "id": 21,
-      "name": "Systemy operacyjne",
-      "group_id": 1,
-      "subject": "Informatyka",
-      "teacher_id": 7,
-      "student_count": 40
-    },
-    {
-      "id": 22,
-      "name": "Bezpieczeństwo systemów",
-      "group_id": 1,
+      "id": 8,
+      "name": "Bazy Danych I (Wykład)",
+      "group_id": 200,
       "subject": "Informatyka",
       "teacher_id": 6,
-      "student_count": 35
-    }
-  ],
-  "rooms": [
-    {
-      "id": 0,
-      "name": "Działownia 1/15",
-      "capacity": 150
-    },
-    {
-      "id": 1,
-      "name": "Sala 131",
-      "capacity": 30
-    },
-    {
-      "id": 2,
-      "name": "Sala wykładowa KI",
-      "capacity": 100
-    },
-    {
-      "id": 3,
-      "name": "Sala N",
-      "capacity": 60
-    },
-    {
-      "id": 4,
-      "name": "Aula główna",
-      "capacity": 200
-    },
-    {
-      "id": 5,
-      "name": "Sala 205",
-      "capacity": 40
-    },
-    {
-      "id": 6,
-      "name": "Sala 312",
-      "capacity": 50
-    },
-    {
-      "id": 7,
-      "name": "Laboratorium komputerowe 1",
-      "capacity": 30
-    },
-    {
-      "id": 8,
-      "name": "Laboratorium komputerowe 2",
-      "capacity": 30
+      "student_count": 90
     },
     {
       "id": 9,
-      "name": "Sala wykładowa A",
-      "capacity": 120
+      "name": "Języki i paradygmaty programowania (Wykład)",
+      "group_id": 200,
+      "subject": "Informatyka",
+      "teacher_id": 7,
+      "student_count": 90
     },
     {
       "id": 10,
-      "name": "Sala wykładowa B",
-      "capacity": 80
+      "name": "Programowanie równoległe i rozproszone (Wykład)",
+      "group_id": 300,
+      "subject": "Informatyka",
+      "teacher_id": 8,
+      "student_count": 70
     },
     {
       "id": 11,
-      "name": "Sala 401",
-      "capacity": 45
+      "name": "Inżynieria oprogramowania (Wykład)",
+      "group_id": 300,
+      "subject": "Informatyka",
+      "teacher_id": 9,
+      "student_count": 70
     },
     {
       "id": 12,
-      "name": "Laboratorium fizyczne",
-      "capacity": 20
+      "name": "Software Engineering (Lecture)",
+      "group_id": 300,
+      "subject": "Informatyka",
+      "teacher_id": 10,
+      "student_count": 30
     },
     {
       "id": 13,
-      "name": "Laboratorium chemiczne",
-      "capacity": 20
+      "name": "Systemy złożone (Wykład)",
+      "group_id": 400,
+      "subject": "Informatyka",
+      "teacher_id": 11,
+      "student_count": 60
+    },
+    {
+      "id": 14,
+      "name": "Big Data (Wykład)",
+      "group_id": 400,
+      "subject": "Informatyka",
+      "teacher_id": 12,
+      "student_count": 60
+    },
+    {
+      "id": 15,
+      "name": "Język angielski (Ćwiczenia)",
+      "group_id": 101,
+      "subject": "Języki",
+      "teacher_id": 13,
+      "student_count": 25
+    },
+    {
+      "id": 16,
+      "name": "Architektura systemów komputerowych (Wykład)",
+      "group_id": 200,
+      "subject": "Informatyka",
+      "teacher_id": 14,
+      "student_count": 90
     }
   ],
   "teachers": [
     {
-      "id": 0,
-      "name": "dr Anna Pudełko",
-      "unavailable_time_slots_ids": [0, 1, 18, 19]
-    },
-    {
       "id": 1,
-      "name": "prof. dr hab. Stanisław Drożdż",
-      "unavailable_time_slots_ids": [5, 6, 7, 23, 24]
+      "name": "dr Anna Pudełko",
+      "unavailable_time_slots_ids": []
     },
     {
       "id": 2,
-      "name": "dr inż. Filip Krużel",
-      "unavailable_time_slots_ids": [2, 14, 26]
+      "name": "prof. dr hab. Stanisław Drożdż",
+      "unavailable_time_slots_ids": []
     },
     {
       "id": 3,
-      "name": "dr hab. Jarosław Kwapień",
-      "unavailable_time_slots_ids": [3, 4, 15, 16]
+      "name": "dr Marcin Wątorek",
+      "unavailable_time_slots_ids": []
     },
     {
       "id": 4,
-      "name": "dr inż. Maria Kowalska",
-      "unavailable_time_slots_ids": [8, 9, 20]
+      "name": "dr Adam Marszałek",
+      "unavailable_time_slots_ids": []
     },
     {
       "id": 5,
-      "name": "prof. dr hab. Jan Nowak",
-      "unavailable_time_slots_ids": [10, 11, 12, 28, 29]
+      "name": "dr inż. Anna Jasińska-Suwada",
+      "unavailable_time_slots_ids": []
     },
     {
       "id": 6,
-      "name": "dr Piotr Wiśniewski",
-      "unavailable_time_slots_ids": [13, 25]
+      "name": "dr inż. Artur Niewiarowski",
+      "unavailable_time_slots_ids": []
     },
     {
       "id": 7,
-      "name": "dr inż. Tomasz Zieliński",
-      "unavailable_time_slots_ids": [17, 27]
+      "name": "dr hab. inż. Sergiy Fialko",
+      "unavailable_time_slots_ids": []
     },
     {
       "id": 8,
-      "name": "dr hab. Katarzyna Lewandowska",
-      "unavailable_time_slots_ids": [1, 2, 19, 20]
+      "name": "dr inż. Filip Krużel",
+      "unavailable_time_slots_ids": []
     },
     {
       "id": 9,
-      "name": "prof. dr hab. Andrzej Szymański",
-      "unavailable_time_slots_ids": [4, 5, 22, 23]
+      "name": "dr hab. inż. Marek Stanuszek",
+      "unavailable_time_slots_ids": []
     },
     {
       "id": 10,
-      "name": "dr inż. Paweł Dąbrowski",
-      "unavailable_time_slots_ids": [6, 7, 24, 25]
+      "name": "dr inż. Paweł Jarosz",
+      "unavailable_time_slots_ids": []
     },
     {
       "id": 11,
-      "name": "dr Magdalena Wójcik",
-      "unavailable_time_slots_ids": [9, 10, 21, 22]
+      "name": "dr hab. Jarosław Kwapień",
+      "unavailable_time_slots_ids": []
     },
     {
       "id": 12,
-      "name": "mgr Anna Król",
-      "unavailable_time_slots_ids": [11, 12, 13]
+      "name": "mgr inż. Tomasz Ligocki",
+      "unavailable_time_slots_ids": []
+    },
+    {
+      "id": 13,
+      "name": "mgr E. Szabat",
+      "unavailable_time_slots_ids": []
+    },
+    {
+      "id": 14,
+      "name": "dr inż. Jerzy Białas",
+      "unavailable_time_slots_ids": []
+    }
+  ],
+  "rooms": [
+    {
+      "id": 20,
+      "name": "Działownia 1/15",
+      "capacity": 150
+    },
+    {
+      "id": 21,
+      "name": "Sala 131",
+      "capacity": 30
+    },
+    {
+      "id": 22,
+      "name": "Sala wykładowa KI",
+      "capacity": 100
+    },
+    {
+      "id": 23,
+      "name": "Sala N",
+      "capacity": 60
+    },
+    {
+      "id": 24,
+      "name": "114 GIL",
+      "capacity": 40
+    },
+    {
+      "id": 25,
+      "name": "Sala 136",
+      "capacity": 30
+    },
+    {
+      "id": 26,
+      "name": "Sala 151",
+      "capacity": 30
+    },
+    {
+      "id": 27,
+      "name": "Sala 135",
+      "capacity": 30
+    },
+    {
+      "id": 28,
+      "name": "Sala 143",
+      "capacity": 30
     }
   ],
   "time_slots": [

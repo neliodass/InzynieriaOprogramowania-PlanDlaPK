@@ -1,5 +1,5 @@
 from dataclasses import dataclass,field
-from typing import List
+from typing import List, Optional
 
 @dataclass(frozen=True)
 class Room:
@@ -13,6 +13,11 @@ class Teacher:
     name: str
     unavailable_time_slots_ids: List[int] = field(default_factory=list)
 
+@dataclass(frozen=True)
+class Group:
+    id: int
+    name: str
+    parent_group_id: Optional[int] = None
 
 @dataclass
 class CourseClass:
@@ -28,5 +33,5 @@ class CourseClass:
 class TimeSlot:
     id: int
     day: int
-    hour_index:int # 0 = 7:30-9:00, 1 = 9:15-10:45, ...
+    hour_index:int
     label:str

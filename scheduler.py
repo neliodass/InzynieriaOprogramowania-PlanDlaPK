@@ -4,11 +4,12 @@ import functools
 
 
 class SchedulerEngine:
-    def __init__(self, courses, rooms, teachers, time_slots):
+    def __init__(self, courses, rooms, teachers, time_slots, groups=None):
         self.courses = courses
         self.rooms = rooms
         self.teachers = teachers
         self.time_slots = time_slots
+        self.groups = groups or []
         self.num_classes = len(courses)
         self.num_rooms = len(rooms)
         self.num_slots = len(time_slots)
@@ -122,6 +123,9 @@ class SchedulerEngine:
 
     def decode_schedule(self, individual):
         schedule = []
+        # Utworzenie mapy grup dla szybkiego dostępu
+        groups_map = {g.id: g for g in self.groups}
+
         for i in range(0, len(individual), 2):
             course_index = i // 2
             course = self.courses[course_index]
@@ -129,6 +133,11 @@ class SchedulerEngine:
             assigned_slot_id = individual[i+1] % self.num_slots
             room = self.rooms[assigned_room_id]
             ts = self.time_slots[assigned_slot_id]
+            teacher = next((t for t in self.teachers if t.id == course.teacher_id), None)
+
+            group = groups_map.get(course.group_id)
+            group_name = group.name if group else f"Grupa {course.group_id}"
+            parent_group_id = group.parent_group_id if group else None
 
             schedule.append({
                 "course_id": course.id,
@@ -138,7 +147,12 @@ class SchedulerEngine:
                 "time_slot_id": ts.id,
                 "day": ts.day,
                 "hour_index": ts.hour_index,
-                "label": ts.label
+                "label": ts.label,
+                "teacher_id": teacher.id,
+                "teacher_name": teacher.name,
+                "group_id": course.group_id,
+                "group_name": group_name,
+                "parent_group_id": parent_group_id,
             })
         return schedule
 
